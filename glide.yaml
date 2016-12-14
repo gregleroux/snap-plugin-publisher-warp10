@@ -1,0 +1,12 @@
+package: github.com/gregleroux/snap-plugin-publisher-warp10
+import:
+- package: github.com/Sirupsen/logrus
+  version: ^0.10.0
+- package: github.com/intelsdi-x/snap-plugin-lib-go
+  subpackages:
+  - v1/plugin
+testImport:
+- package: github.com/smartystreets/goconvey
+  version: ^1.6.2
+  subpackages:
+  - convey

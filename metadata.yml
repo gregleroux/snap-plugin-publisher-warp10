@@ -1,0 +1,7 @@
+name: warp10
+type: publisher
+maintainer: gregleroux
+license: Apache-2.0
+description: "Publishes metrics to warp10."
+badge:
+ci:
