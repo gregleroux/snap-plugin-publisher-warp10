@@ -41,7 +41,6 @@ func (f *Warp10Publisher) Publish(metrics []plugin.Metric, cfg plugin.Config) er
 	pts := make([]string, 0)
 	// Parsing
 	for _, m := range metrics {
-		//ns := strings.Join(m.Namespace.Strings(), ".")
 		ns := m.Namespace.Strings()
 
 		tempTags := make(map[string]string)
@@ -52,9 +51,7 @@ func (f *Warp10Publisher) Publish(metrics []plugin.Metric, cfg plugin.Config) er
 		}
 		tempTags["host"] = string(tags[core.STD_TAG_PLUGIN_RUNNING_ON])
 
-		// Copy of influxdb publisher code
 		newtags := map[string]string{}
-
 		isDynamic, indexes := m.Namespace.IsDynamic()
 		if isDynamic {
 			for i, j := range indexes {
