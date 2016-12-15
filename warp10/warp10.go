@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-	"strconv"
 	"strings"
 	"sort"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/intelsdi-x/snap-plugin-lib-go/v1/plugin"
-	"github.com/intelsdi-x/snap/core"
 	"bytes"
 )
 
@@ -49,7 +47,7 @@ func (f *Warp10Publisher) Publish(metrics []plugin.Metric, cfg plugin.Config) er
 		for k, v := range tags {
 			tempTags[k] = string(v)
 		}
-		tempTags["host"] = string(tags[core.STD_TAG_PLUGIN_RUNNING_ON])
+		//tempTags["host"] = string(tags[core.STD_TAG_PLUGIN_RUNNING_ON])
 
 		newtags := map[string]string{}
 		isDynamic, indexes := m.Namespace.IsDynamic()
@@ -70,7 +68,7 @@ func (f *Warp10Publisher) Publish(metrics []plugin.Metric, cfg plugin.Config) er
 		for k, v := range newtags {
 			tempTags[k] = v
 		}
-		metricValue, _ := buildValue(m.Data)
+		metricValue := fmt.Sprintf("%v",m.Data)
 
 		tagsSlice := buildTags(tempTags)
 		finalTags := strings.Join(tagsSlice, ",")
@@ -82,7 +80,7 @@ func (f *Warp10Publisher) Publish(metrics []plugin.Metric, cfg plugin.Config) er
 			Value:metricValue,
 		}
 		messageLine := fmt.Sprintf("%d// %s{%s} %s\n", temp.Timestamp, temp.Metric, temp.Tags, temp.Value)
-		logger.Debug("Metric ready to send %s",messageLine)
+		logger.Debug("Metric ready to send %v",messageLine)
 		pts = append(pts, messageLine)
 	}
 
@@ -91,14 +89,18 @@ func (f *Warp10Publisher) Publish(metrics []plugin.Metric, cfg plugin.Config) er
 	req.Header.Set("X-CityzenData-Token", token)
 	req.Header.Set("Content-Type", "text/plain")
 
+	start := time.Now()
 	client := &http.Client{Timeout:timeout * time.Second}
 	resp, err := client.Do(req)
 	if err != nil {
 		logger.Errorf("Unable to send metrics. Error: %s", err)
 		return fmt.Errorf("Unable to send metrics. Error: %s", err)
 	}
-	defer resp.Body.Close()
 
+	logger.Debug("Warp10 POST http code: %v",resp.StatusCode)
+	elapsed := time.Since(start)
+	logger.Debug("Warp10 POST took %v", elapsed)
+	defer resp.Body.Close()
 	logger.Debug("Metrics sent to Warp10.")
 	return nil
 }
@@ -147,39 +149,4 @@ func buildTags(ptTags map[string]string) []string {
 	}
 	sort.Strings(tags)
 	return tags
-}
-
-func buildValue(v interface{}) (string, error) {
-	var retv string
-	switch p := v.(type) {
-	case int64:
-		retv = IntToString(int64(p))
-	case string:
-		retv = fmt.Sprintf("'%s'", p)
-	case bool:
-		retv = BoolToString(bool(p))
-	case uint64:
-		retv = UIntToString(uint64(p))
-	case float64:
-		retv = FloatToString(float64(p))
-	default:
-		retv = fmt.Sprintf("'%s'", p)
-	}
-	return retv, nil
-}
-
-func IntToString(input_num int64) string {
-	return strconv.FormatInt(input_num, 10)
-}
-
-func BoolToString(input_bool bool) string {
-	return strconv.FormatBool(input_bool)
-}
-
-func UIntToString(input_num uint64) string {
-	return strconv.FormatUint(input_num, 10)
-}
-
-func FloatToString(input_num float64) string {
-	return strconv.FormatFloat(input_num, 'f', 6, 64)
 }
