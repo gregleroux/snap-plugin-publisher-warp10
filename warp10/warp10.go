@@ -96,11 +96,10 @@ func (f *Warp10Publisher) Publish(metrics []plugin.Metric, cfg plugin.Config) er
 		logger.Errorf("Unable to send metrics. Error: %s", err)
 		return fmt.Errorf("Unable to send metrics. Error: %s", err)
 	}
-
+	defer resp.Body.Close()
 	logger.Debug("Warp10 POST http code: %v",resp.StatusCode)
 	elapsed := time.Since(start)
 	logger.Debug("Warp10 POST took %v", elapsed)
-	defer resp.Body.Close()
 	logger.Debug("Metrics sent to Warp10.")
 	return nil
 }
