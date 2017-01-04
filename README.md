@@ -9,7 +9,7 @@ This plugin publishes metrics to Warp10
 2. [Documentation](#documentation)
   * [Task Manifest Config](#task-manifest-config)
   * [Examples](#examples)
-3. [Licence](#licence)
+3. [License](#license)
   
 
 ### System Requirements
@@ -80,6 +80,6 @@ for example `psutil-warp10-simple.json` with following content:
 
 ```
 
-## Licence
+## License
+[License](LICENSE)
 
-[Licence]: (LICENCE)
