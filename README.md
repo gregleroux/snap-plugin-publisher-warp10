@@ -1,6 +1,6 @@
 # Snap publisher plugin - Warp10
 
-This plugin publishes metrics to Warp10.
+This plugin publishes metrics to Warp10
 
 1. [Getting Started](#getting-started)
   * [System Requirements](#system-requirements)
@@ -9,10 +9,12 @@ This plugin publishes metrics to Warp10.
 2. [Documentation](#documentation)
   * [Task Manifest Config](#task-manifest-config)
   * [Examples](#examples)
+3. [Licence](#licence)
+  
 
 ### System Requirements
 * The Snap daemon is running
-* A running version of [Warp10](https://github.com/cityzendata/warp10-platform) reachable by the Snap daemon is required for this plugin to successfully publish data
+* A running version of [Warp10](https://github.com/cityzendata/warp10-platform) reachable by the Snap daemon is required for this plugin to successfully publish data or metrics account at OVH.(https://www.ovh.com/fr/data-platforms/metrics/)
 
 ### Installation
 #### To build the plugin binary:
@@ -77,3 +79,7 @@ for example `psutil-warp10-simple.json` with following content:
 }
 
 ```
+
+## Licence
+
+[Licence]: (LICENCE)
